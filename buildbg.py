@@ -45,7 +45,7 @@ def buildbg():
     cd['DCDframe2'] = ctk.CTkFrame(master=cd['Super_frame'],fg_color="transparent")
 
     
-    cd['analisis_button'] = ctk.CTkButton(master=cd['Super_frame'],text="Analise",command=StartAnalisis)
+    cd['analisis_button'] = ctk.CTkButton(master=cd['Super_frame'],text="Analyse",command=StartAnalisis)
     
 
     cd['pdbentry'].pack(side="left",padx=10,pady=10)
@@ -166,6 +166,7 @@ def buildbg():
     oe.root.update()
     ost.Pause.set()
     
+
 
 
 
