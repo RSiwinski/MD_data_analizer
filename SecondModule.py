@@ -591,25 +591,24 @@ def MapaKontaktow(DCDobj : DCDReader,dcdfiles,threshold):
     Std = variance ** 0.5
 
     if threshold is None:
-        MAX = 50
         CMP="viridis"
         MName = "Mean distances (Å)"
         FFrame = "Contact Frame: 1"
         SFrame = "Frame: 2"
     else:
-        MAX = 1 
         CMP="gray"
         MName = "Mean distances (Å) - (threshold: {})".format(threshold)
         FFrame = "Contact Frame: 1 (threshold: {})".format(threshold)
         SFrame = "Frame: 2  (threshold: {})".format(threshold)
-
-    MeanImage = [CreateFigure(x=None,y=Mean,xlabel="Atom Index",ylabel="Atom Index",ishow=True,vmin=0,vmax=MAX,cmap=CMP),Mean,MName]
-
-    FrameAImage = [CreateFigure(x=None,y=Adraw,xlabel="Atom Index",ylabel="Atom Index",ishow=True,title=FFrame[8:],vmin=0,vmax=MAX,cmap=CMP),FrameA,FFrame]
-
-    FrameBImage = [CreateFigure(x=None,y=Bdraw,xlabel="Atom Index",ylabel="Atom Index",ishow=True,title=SFrame,vmin=0,vmax=MAX,cmap=CMP),FrameB,SFrame]
-
-    StdImage = [CreateFigure(x=None,y=Std,xlabel="Atom Index",ylabel="Atom Index",ishow=True,vmin=0,vmax=MAX,cmap=CMP),Std,"Root mean square deviation (Å)"]
+        
+    mean_max = np.max(Mean) if threshold is None else 1
+    MeanImage = [CreateFigure(x=None,y=Mean,xlabel="Atom Index",ylabel="Atom Index",ishow=True,vmin=0,vmax=mean_max,cmap=CMP),Mean,MName]
+    A_max = np.max(Adraw) if threshold is None else 1
+    FrameAImage = [CreateFigure(x=None,y=Adraw,xlabel="Atom Index",ylabel="Atom Index",ishow=True,title=FFrame[8:],vmin=0,vmax=A_max,cmap=CMP),FrameA,FFrame]
+    B_max = np.max(Bdraw) if threshold is None else 1
+    FrameBImage = [CreateFigure(x=None,y=Bdraw,xlabel="Atom Index",ylabel="Atom Index",ishow=True,title=SFrame,vmin=0,vmax=B_max,cmap=CMP),FrameB,SFrame]
+    std_max = np.percentile(Std,95) if threshold is None else 1
+    StdImage = [CreateFigure(x=None,y=Std,xlabel="Atom Index",ylabel="Atom Index",ishow=True,vmin=0,vmax=std_max,cmap=CMP),Std,"Standard deviation (Å)"]
     
 
     return [FrameAImage,FrameBImage,MeanImage,StdImage]
@@ -727,6 +726,7 @@ def CreateFigure(x,y,xlabel,ylabel,ishow=False,title=None,vmin=0,vmax=50,cmap="v
         ax.set_title(title)
     fig.subplots_adjust(left=0.2)
     return fig
+
 
 
 
