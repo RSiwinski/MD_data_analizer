@@ -1,5 +1,6 @@
 import Other.Elements as oe
 import customtkinter as ctk
+import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from Other.Save_graph import Save_graph
 from Other.Del_graph_button import Del_graph_button
@@ -105,7 +106,7 @@ def render_results(wyniki,cd):
             CmapA.insert(0, "viridis")
             if "threshold" not in wyniki[i][2]:
                 ClimA = ctk.CTkEntry(master=FrameASwitchboard)
-                ClimA.insert(0, "(0,50)")
+                ClimA.insert(0, "(0,{})".format(int(np.max(wyniki[i][1]))))
             else:
                 Athresold = ctk.CTkEntry(master=FrameASwitchboard)
                 Athresold.insert(0, wyniki[i][2].split("threshold: ")[1].strip()[:-1])
@@ -118,6 +119,7 @@ def render_results(wyniki,cd):
             FrameAButton = ctk.CTkButton(master=FrameASwitchboard,text=">",command=lambda i=i:switchmap(dcdfiles[int(ACheckBox.get())],PDBfile,int(FrameAInput.get()),i,"A", threshold=TFthreshold))
             graf_A = FigureCanvasTkAgg(wyniki[i][0],master=cc['MapFrame']).get_tk_widget()
             FrameASave = ctk.CTkButton(master=cc['MapFrame'],text="Save",command=lambda i=i:Save_graph(wyniki[i][2]))
+            
             FrameBSwitchboard = ctk.CTkFrame(master=cc["MapFrame"],fg_color="transparent")
             BCheckBox = ctk.CTkComboBox(master=FrameBSwitchboard,values=[str(i) for i in range(num)])
             BCheckBox.set("0")
@@ -125,16 +127,16 @@ def render_results(wyniki,cd):
             FrameBInput.insert(0, "2")
             CmapB = ctk.CTkEntry(master=FrameBSwitchboard)
             CmapB.insert(0, "viridis")
-            if "threshold" not  in wyniki[i][2]:
+            if "threshold" not  in wyniki[i+1][2]:
                 ClimB = ctk.CTkEntry(master=FrameBSwitchboard)
-                ClimB.insert(0, "(0,50)")
+                ClimB.insert(0, "(0,{})".format(int(np.max(wyniki[i+1][1]))))
             else:
                 Bthresold = ctk.CTkEntry(master=FrameBSwitchboard)
                 Bthresold.insert(0, wyniki[i+1][2].split("threshold: ")[1].strip()[:-1])
             #
-            FrameBButton = ctk.CTkButton(master=FrameBSwitchboard,text=">",command=lambda i=i+1:switchmap(dcdfiles[int(BCheckBox.get())],PDBfile,int(FrameBInput.get()),i+1,"B",threshold=TFthreshold))
+            FrameBButton = ctk.CTkButton(master=FrameBSwitchboard,text=">",command=lambda x=i+1:switchmap(dcdfiles[int(BCheckBox.get())],PDBfile,int(FrameBInput.get()),x,"B",threshold=TFthreshold))
             graf_B = FigureCanvasTkAgg(wyniki[i+1][0],master=cc['MapFrame']).get_tk_widget()
-            FrameBSave = ctk.CTkButton(master=cc['MapFrame'],text="Save",command=lambda i=i+1:Save_graph(wyniki[i][2]))
+            FrameBSave = ctk.CTkButton(master=cc['MapFrame'],text="Save",command=lambda i=i+1:Save_graph(wyniki[i+1][2]))
             top10s(wyniki[i][1],"A")
             top10s(wyniki[i+1][1],"B")
             TextFrame = ctk.CTkFrame(master=cc['MapFrame'],fg_color="transparent")
